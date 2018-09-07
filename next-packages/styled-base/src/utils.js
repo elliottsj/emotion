@@ -4,10 +4,19 @@ import isPropValid from '@emotion/is-prop-valid'
 
 export type Interpolations = Array<any>
 
-export const testOmitPropsOnStringTag: (key: string) => boolean = isPropValid
-export const testOmitPropsOnComponent = (key: string) =>
-  key !== 'theme' && key !== 'innerRef'
+const testOmitPropsOnStringTag: (key: string) => boolean = isPropValid
+const testOmitPropsOnComponent = (key: string) =>
+  key !== 'theme' && key !== 'innerRef' && key !== 'as'
 export const testAlwaysTrue = () => true
+
+export const getShouldForwardProp = tag =>
+  typeof tag === 'string' &&
+  // 96 is one less than the char code
+  // for "a" so this is checking that
+  // it's a lowercase character
+  tag.charCodeAt(0) > 96
+    ? testOmitPropsOnStringTag
+    : testOmitPropsOnComponent
 
 export const pickAssign: (
   testFn: (key: string) => boolean,
